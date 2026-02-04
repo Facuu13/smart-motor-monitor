@@ -10,6 +10,14 @@
 
 static const char *TAG = "main";
 
+
+static void build_telemetry_topic(char *out, size_t out_len, const char *base, const char *device_id)
+{
+    // agro/smart-motor/<device_id>/telemetry
+    snprintf(out, out_len, "%s/%s/telemetry", base, device_id);
+}
+
+
 void app_main(void)
 {
     ESP_LOGI(TAG, "Etapa 2.2 - Telemetria (modulo)");
@@ -37,7 +45,10 @@ void app_main(void)
         if (mqtt_manager_is_connected()) {
             char payload[160];
             if (telemetry_build_json(payload, sizeof(payload))) {
-                mqtt_manager_publish(CONFIG_APP_MQTT_TOPIC_TELEMETRY, payload, 0, 0);
+                char topic[128];
+                build_telemetry_topic(topic, sizeof(topic), CONFIG_APP_MQTT_TOPIC_BASE, CONFIG_APP_MQTT_CLIENT_ID);
+                mqtt_manager_publish(topic, payload, 0, 0);
+
             } else {
                 ESP_LOGW(TAG, "telemetry_build_json: buffer too small?");
             }

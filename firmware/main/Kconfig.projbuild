@@ -24,11 +24,13 @@ menu "Smart Motor Monitor (Agro) - App Configuration"
         help
             Client ID del dispositivo (debe ser único en el broker).
 
-    config APP_MQTT_TOPIC_TELEMETRY
-        string "MQTT Telemetry Topic"
-        default "agro/smart-motor/telemetry"
+        config APP_MQTT_TOPIC_BASE
+        string "MQTT Base Topic"
+        default "agro/smart-motor"
         help
-            Topic donde el dispositivo publica telemetría.
+            Raíz de topics. El firmware publicará en:
+            <base>/<device_id>/telemetry
+
 
 
 endmenu

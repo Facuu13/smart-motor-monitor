@@ -1,3 +1,3 @@
-idf_component_register(SRCS "firmware.c" "wifi_manager.c"
+idf_component_register(SRCS "firmware.c" "wifi_manager.c" "mqtt_manager.c"
                        INCLUDE_DIRS "."
-                       REQUIRES nvs_flash esp_wifi esp_netif esp_event)
+                       REQUIRES nvs_flash esp_wifi esp_netif esp_event mqtt)

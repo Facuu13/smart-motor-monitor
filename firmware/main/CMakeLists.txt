@@ -1,2 +1,3 @@
-idf_component_register(SRCS "firmware.c"
-                    INCLUDE_DIRS ".")
+idf_component_register(SRCS "firmware.c" "wifi_manager.c"
+                       INCLUDE_DIRS "."
+                       REQUIRES nvs_flash esp_wifi esp_netif esp_event)

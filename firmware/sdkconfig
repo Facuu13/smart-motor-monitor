@@ -500,6 +500,9 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 CONFIG_APP_WIFI_SSID="quepasapatejode"
 CONFIG_APP_WIFI_PASS="losvilla08"
+CONFIG_APP_MQTT_BROKER_URI="mqtt://192.168.1.11"
+CONFIG_APP_MQTT_CLIENT_ID="esp32c3-agro-001"
+CONFIG_APP_MQTT_TOPIC_TELEMETRY="agro/smart-motor/telemetry"
 # end of Smart Motor Monitor (Agro) - App Configuration
 
 #

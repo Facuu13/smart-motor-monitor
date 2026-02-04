@@ -12,4 +12,23 @@ menu "Smart Motor Monitor (Agro) - App Configuration"
         help
             Password de la red Wi-Fi.
 
+    config APP_MQTT_BROKER_URI
+        string "MQTT Broker URI"
+        default "mqtt://192.168.1.11"
+        help
+            URI del broker MQTT. Ej: mqtt://192.168.1.11
+
+    config APP_MQTT_CLIENT_ID
+        string "MQTT Client ID"
+        default "esp32c3-agro-001"
+        help
+            Client ID del dispositivo (debe ser único en el broker).
+
+    config APP_MQTT_TOPIC_TELEMETRY
+        string "MQTT Telemetry Topic"
+        default "agro/smart-motor/telemetry"
+        help
+            Topic donde el dispositivo publica telemetría.
+
+
 endmenu

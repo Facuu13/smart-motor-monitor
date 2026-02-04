@@ -4,23 +4,21 @@
 #include "nvs_flash.h"
 #include "wifi_manager.h"
 
-static const char *TAG = "main";
+#include "sdkconfig.h"   // To use CONFIG_APP_WIFI_SSID and CONFIG_APP_WIFI_PASS
 
-#define WIFI_SSID "quepasapatejode"
-#define WIFI_PASS "losvilla08"
+static const char *TAG = "main";
 
 void app_main(void)
 {
-    ESP_LOGI(TAG, "Etapa 1.1 - Wi-Fi con modulo");
+    ESP_LOGI(TAG, "Etapa 1.2 - Wi-Fi credentials via menuconfig");
 
-    // NVS (Wi-Fi lo necesita)
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
         ESP_ERROR_CHECK(nvs_flash_init());
     }
 
-    ESP_ERROR_CHECK(wifi_manager_init_sta(WIFI_SSID, WIFI_PASS));
+    ESP_ERROR_CHECK(wifi_manager_init_sta(CONFIG_APP_WIFI_SSID, CONFIG_APP_WIFI_PASS));
 
     while (1) {
         vTaskDelay(pdMS_TO_TICKS(1000));

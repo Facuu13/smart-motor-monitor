@@ -1,0 +1,15 @@
+menu "Smart Motor Monitor (Agro) - App Configuration"
+
+    config APP_WIFI_SSID
+        string "WiFi SSID"
+        default ""
+        help
+            SSID de la red Wi-Fi.
+
+    config APP_WIFI_PASS
+        string "WiFi Password"
+        default ""
+        help
+            Password de la red Wi-Fi.
+
+endmenu

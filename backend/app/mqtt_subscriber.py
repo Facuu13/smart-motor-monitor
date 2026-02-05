@@ -5,6 +5,9 @@ import paho.mqtt.client as mqtt
 
 from .config import MQTT_HOST, MQTT_PORT, MQTT_TOPIC
 
+from .db import init_db, insert_telemetry
+
+
 
 def parse_topic(topic: str) -> Tuple[Optional[str], str]:
     # agro/smart-motor/<device_id>/telemetry
@@ -37,10 +40,14 @@ def on_message(client: mqtt.Client, userdata, msg: mqtt.MQTTMessage):
 
     device_id = data.get("device_id") or device_id_from_topic or "unknown"
 
-    print(f"[MQTT] RX device={device_id} kind={kind} topic={topic} data={data}")
+    insert_telemetry(device_id=device_id, topic=topic, payload=data)
+
+    print(f"[MQTT] SAVED device={device_id} kind={kind} topic={topic} data={data}")
 
 
 def run_forever():
+    init_db()
+
     client = mqtt.Client(client_id="backend-smart-motor-monitor")
     client.on_connect = on_connect
     client.on_message = on_message

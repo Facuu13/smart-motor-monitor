@@ -6,3 +6,18 @@ services:
       - "1883:1883"
     volumes:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: smart-motor-postgres
+    environment:
+      POSTGRES_DB: smartmotor
+      POSTGRES_USER: smartmotor
+      POSTGRES_PASSWORD: smartmotor
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

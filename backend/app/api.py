@@ -2,6 +2,10 @@ from fastapi import FastAPI, HTTPException, Query
 from .db import init_db
 from .queries import list_devices, latest_telemetry, latest_all
 
+from fastapi.responses import FileResponse
+from pathlib import Path
+
+
 app = FastAPI(title="Smart Motor Monitor API", version="0.1.0")
 
 
@@ -14,6 +18,12 @@ def _startup():
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.get("/")
+def dashboard():
+    static_dir = Path(__file__).resolve().parent / "static"
+    return FileResponse(static_dir / "index.html")
+
 
 
 @app.get("/devices")

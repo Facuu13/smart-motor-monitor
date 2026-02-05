@@ -19,5 +19,42 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  backend_ingest:
+    build:
+      context: ../backend
+    container_name: smart-motor-backend-ingest
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: "1883"
+      MQTT_TOPIC: agro/smart-motor/+/telemetry
+
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: smartmotor
+      DB_USER: smartmotor
+      DB_PASS: smartmotor
+    depends_on:
+      - mosquitto
+      - postgres
+    command: ["python", "run.py"]
+    restart: unless-stopped
+
+  backend_api:
+    build:
+      context: ../backend
+    container_name: smart-motor-backend-api
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: smartmotor
+      DB_USER: smartmotor
+      DB_PASS: smartmotor
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    command: ["python", "run_api.py"]
+    restart: unless-stopped
+
 volumes:
   pgdata:

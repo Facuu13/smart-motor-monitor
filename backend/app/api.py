@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Query
 from .db import init_db
-from .queries import list_devices, latest_telemetry, latest_all
+from .queries import list_devices, latest_telemetry, latest_all, latest_per_device
 
 from fastapi.responses import FileResponse
 from pathlib import Path
@@ -42,3 +42,8 @@ def telemetry_latest(device_id: str = Query(..., min_length=1)):
 @app.get("/telemetry/recent")
 def telemetry_recent(limit: int = Query(50, ge=1, le=500)):
     return {"items": latest_all(limit=limit)}
+
+@app.get("/telemetry/latest_all")
+def telemetry_latest_all(limit_devices: int = Query(200, ge=1, le=1000)):
+    return {"items": latest_per_device(limit_devices=limit_devices)}
+

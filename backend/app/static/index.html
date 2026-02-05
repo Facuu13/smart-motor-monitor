@@ -96,25 +96,25 @@
     }
 
     async function refresh() {
-      try {
-        tbody.innerHTML = `<tr><td colspan="7" class="muted">Actualizando…</td></tr>`;
-        const devs = await getJSON("/devices?limit=200");
-        const devices = devs.devices || [];
+        try {
+            tbody.innerHTML = `<tr><td colspan="7" class="muted">Actualizando…</td></tr>`;
 
-        if (devices.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="7" class="muted">No hay dispositivos todavía. (¿Está corriendo el ingest?)</td></tr>`;
-          return;
-        }
+            const res = await getJSON("/telemetry/latest_all?limit_devices=200");
+            const items = (res && res.items) ? res.items : [];
 
-        const rows = [];
-        for (const d of devices) {
-          try {
-            const item = await getJSON(`/telemetry/latest?device_id=${encodeURIComponent(d)}`);
+            if (items.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" class="muted">No hay datos todavía.</td></tr>`;
+            lastUpdate.textContent = "Última actualización: " + new Date().toLocaleString();
+            return;
+            }
+
+            const rows = items.map(item => {
+            const d = item.device_id || "unknown";
             const p = item.payload || {};
             const st = statusFrom(p);
 
-            rows.push(`
-              <tr>
+            return `
+                <tr>
                 <td>${st}</td>
                 <td><code>${d}</code></td>
                 <td>${item.ts_ingest || "—"}</td>
@@ -122,25 +122,17 @@
                 <td>${fmt(p.temp_c)}</td>
                 <td>${fmt(p.vib_rms)}</td>
                 <td class="muted"><code>${JSON.stringify(p)}</code></td>
-              </tr>
-            `);
-          } catch (e) {
-            rows.push(`
-              <tr>
-                <td>⚪</td>
-                <td><code>${d}</code></td>
-                <td colspan="5" class="muted">Sin datos / error consultando latest</td>
-              </tr>
-            `);
-          }
-        }
+                </tr>
+            `;
+            });
 
-        tbody.innerHTML = rows.join("");
-        lastUpdate.textContent = "Última actualización: " + new Date().toLocaleString();
-      } catch (e) {
-        tbody.innerHTML = `<tr><td colspan="7" class="muted">Error: ${e.message}</td></tr>`;
-      }
+            tbody.innerHTML = rows.join("");
+            lastUpdate.textContent = "Última actualización: " + new Date().toLocaleString();
+        } catch (e) {
+            tbody.innerHTML = `<tr><td colspan="7" class="muted">Error: ${e.message}</td></tr>`;
+        }
     }
+
 
     let timer = null;
     function schedule() {
